@@ -1,6 +1,6 @@
 # air_plane
 
-A new Flutter project.
+A simple Flutter Application named Volami, permits us to serach available flights and booking it.
 
 ## Getting Started
 
