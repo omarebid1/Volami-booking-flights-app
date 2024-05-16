@@ -1,5 +1,6 @@
 import 'package:air_plane/DB/db.dart';
 import 'package:air_plane/layout/login_page_layout.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -237,14 +238,25 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                                     .pushReplacementNamed("/homepage");
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == 'weak-password') {
-                                  if (kDebugMode) {
-                                    print('The password provided is too weak.');
-                                  }
+                                  print('The password provided is too weak!');
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.error,
+                                    animType: AnimType.rightSlide,
+                                    title: 'Error',
+                                    desc: 'The password provided is too weak!',
+                                  ).show();
                                 } else if (e.code == 'email-already-in-use') {
-                                  if (kDebugMode) {
-                                    print(
-                                        'The account already exists for that email.');
-                                  }
+                                  print(
+                                      'The account already exists for that email!');
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.error,
+                                    animType: AnimType.rightSlide,
+                                    title: 'Error',
+                                    desc:
+                                        'The account already exists for that email!',
+                                  ).show();
                                 }
                               } catch (e) {
                                 if (kDebugMode) {
