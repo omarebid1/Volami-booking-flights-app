@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "234725381110",
+    "firebase_url": "https://volami-dc111-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "volami-dc111",
     "storage_bucket": "volami-dc111.appspot.com"
   },

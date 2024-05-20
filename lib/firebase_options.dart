@@ -54,6 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:234725381110:android:cf5f39f9de45d17615edd7',
     messagingSenderId: '234725381110',
     projectId: 'volami-dc111',
+    databaseURL: 'https://volami-dc111-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'volami-dc111.appspot.com',
   );
 
@@ -62,7 +63,9 @@ class DefaultFirebaseOptions {
     appId: '1:234725381110:ios:2758203b74abf0f815edd7',
     messagingSenderId: '234725381110',
     projectId: 'volami-dc111',
+    databaseURL: 'https://volami-dc111-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'volami-dc111.appspot.com',
     iosBundleId: 'com.example.airPlane',
   );
+
 }

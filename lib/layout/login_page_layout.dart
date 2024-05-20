@@ -1,8 +1,7 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../shared/components/components.dart';
+// Import the register screen file
 
 class LoginScreenLayout extends StatefulWidget {
   const LoginScreenLayout({super.key});
@@ -48,14 +47,14 @@ class _LoginScreenLayoutState extends State<LoginScreenLayout> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Sign In',
+                      'Sign in',
                       style: TextStyle(
                         fontSize: 50,
                         color: Colors.white,
                       ),
                     ),
                     Text(
-                      'Welcome to Volami... ',
+                      'Welcome to Volami ✈︎ ',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.white.withOpacity(0.8),
@@ -125,41 +124,21 @@ class _LoginScreenLayoutState extends State<LoginScreenLayout> {
                         const SizedBox(
                           height: 40,
                         ),
+                        // login button
                         defaultButton(
                           function: () async {
                             try {
                               final credential = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
-                                email: emailController.text,
-                                password: passwordController.text,
-                              );
+                                      email: emailController.text,
+                                      password: passwordController.text);
                               Navigator.of(context)
-                                  .pushReplacementNamed('/homePage');
+                                  .pushReplacementNamed('/home_page');
                             } on FirebaseAuthException catch (e) {
                               if (e.code == 'user-not-found') {
-                                if (kDebugMode) {
-                                  print('No user found for that email!');
-                                }
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.rightSlide,
-                                  title: 'Error',
-                                  desc: 'No user found for that email!',
-                                ).show();
+                                print('No user found for that email.');
                               } else if (e.code == 'wrong-password') {
-                                if (kDebugMode) {
-                                  print(
-                                      'Wrong password provided for that user!');
-                                }
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.error,
-                                  animType: AnimType.rightSlide,
-                                  title: 'Error',
-                                  desc:
-                                      'Wrong password provided for that user!',
-                                ).show();
+                                print('Wrong password provided for that user.');
                               }
                             }
                           },
@@ -167,6 +146,7 @@ class _LoginScreenLayoutState extends State<LoginScreenLayout> {
                           radius: 15,
                           textSize: 20,
                         ),
+                        // register now
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -175,11 +155,28 @@ class _LoginScreenLayoutState extends State<LoginScreenLayout> {
                               onPressed: () {
                                 // Navigate to the register screen
                                 Navigator.of(context)
-                                    .pushReplacementNamed("/signUp");
+                                    .pushReplacementNamed('/register_page');
                               },
                               child: const Text(
                                 'Register Now',
                                 style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // forgot password
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Forgot your password?'),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .pushReplacementNamed('/reset_password');
+                              },
+                              child: const Text(
+                                'Reset Password',
+                                style: TextStyle(color: Colors.red),
                               ),
                             ),
                           ],

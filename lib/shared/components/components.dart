@@ -90,6 +90,7 @@ Widget ticketBuilder() => Stack(
                       'Egypt Air',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                         fontSize: 17,
                       ),
                     ),
@@ -205,7 +206,7 @@ Widget ticketBuilder() => Stack(
           ),
         ),
         Positioned(
-          left: 325,
+          left: 345,
           top: 80,
           child: Container(
             width: 10,

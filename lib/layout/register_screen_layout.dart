@@ -1,6 +1,3 @@
-import 'package:air_plane/DB/db.dart';
-import 'package:air_plane/layout/login_page_layout.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +13,22 @@ class RegisterScreenLayout extends StatefulWidget {
 
 class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
   var emailController = TextEditingController();
+
   var passwordController = TextEditingController();
+
   var passwordController2 = TextEditingController();
+
   var phoneNumberController = TextEditingController();
+
   var firstNameController = TextEditingController();
+
   var lastNameController = TextEditingController();
+
   var formKey = GlobalKey<FormState>();
+
   bool isPassword = true;
+
+  //bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +56,6 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                 const SizedBox(
                   height: 50,
                 ),
-
-                // the welcome upper text
                 Padding(
                   padding: const EdgeInsets.all(21.0),
                   child: Column(
@@ -65,7 +69,7 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                         ),
                       ),
                       Text(
-                        'Join now on Volami community',
+                        'Register now at Volami ✈︎',
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.white.withOpacity(0.8),
@@ -77,8 +81,6 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                 const SizedBox(
                   height: 20,
                 ),
-
-                // it has all the registration form
                 Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -91,8 +93,6 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                   child: Padding(
                     padding:
                         const EdgeInsets.only(top: 60, left: 30, right: 30),
-
-                    // the registration form
                     child: Form(
                       key: formKey,
                       child: Column(
@@ -154,8 +154,6 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Phone is required';
-                              } else if (!isPhoneNumberValid(value)) {
-                                return 'this phone number used';
                               }
                               return null;
                             },
@@ -233,43 +231,81 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                                   email: emailController.text,
                                   password: passwordController.text,
                                 );
-
                                 Navigator.of(context)
-                                    .pushReplacementNamed("/homepage");
+                                    .pushReplacementNamed('/login_page');
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Registered'),
+                                      content: const Text(
+                                          'Account Created successfully!'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == 'weak-password') {
-                                  print('The password provided is too weak!');
-                                  AwesomeDialog(
+                                  if (kDebugMode) {
+                                    print('The password provided is too weak.');
+                                  }
+                                  showDialog(
                                     context: context,
-                                    dialogType: DialogType.error,
-                                    animType: AnimType.rightSlide,
-                                    title: 'Error',
-                                    desc: 'The password provided is too weak!',
-                                  ).show();
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: const Text(
+                                            'The password provided is too weak!'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 } else if (e.code == 'email-already-in-use') {
-                                  print(
-                                      'The account already exists for that email!');
-                                  AwesomeDialog(
+                                  if (kDebugMode) {
+                                    print(
+                                        'The account already exists for that email.');
+                                  }
+                                  showDialog(
                                     context: context,
-                                    dialogType: DialogType.error,
-                                    animType: AnimType.rightSlide,
-                                    title: 'Error',
-                                    desc:
-                                        'The account already exists for that email!',
-                                  ).show();
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Error'),
+                                        content: const Text(
+                                            'The account already exists for that email!'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 }
                               } catch (e) {
-                                if (kDebugMode) {
-                                  print(e);
-                                }
+                                print(e);
                               }
                             },
                             text: 'Register',
                             radius: 15,
                             textSize: 20,
                           ),
-
-                          //
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -278,14 +314,8 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // Navigate to the register screen
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LoginScreenLayout(),
-                                    ),
-                                  );
+                                  Navigator.of(context)
+                                      .pushReplacementNamed('/login_page');
                                 },
                                 child: const Text(
                                   'Login',
