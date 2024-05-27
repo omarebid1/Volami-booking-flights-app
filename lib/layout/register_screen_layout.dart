@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +27,38 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
 
   var lastNameController = TextEditingController();
 
+  String? randomUserID;
+
   var formKey = GlobalKey<FormState>();
 
   bool isPassword = true;
+
+  // method to created and store random id
+  String generateUserId() {
+    const String chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    Random random = Random();
+
+    return String.fromCharCodes(Iterable.generate(
+        8, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
+  }
+
+  // created a collection into firestore named users
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+  Future<void> addUser() {
+    // Call the user's CollectionReference to add a new user
+    return users
+        .add({
+          'user_id': 'user-${generateUserId()}',
+          'first_name': firstNameController.text,
+          'last_name': lastNameController.text,
+          'email': emailController.text,
+          'phone': phoneNumberController.text,
+          'password': passwordController.text,
+        })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
+  }
 
   //bool isVisible = false;
 
@@ -225,81 +257,87 @@ class _RegisterScreenLayoutState extends State<RegisterScreenLayout> {
                           ),
                           defaultButton(
                             function: () async {
-                              try {
-                                final credential = await FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                );
-                                Navigator.of(context)
-                                    .pushReplacementNamed('/login_page');
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('Registered'),
-                                      content: const Text(
-                                          'Account Created successfully!'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('OK'),
-                                        ),
-                                      ],
+                              addUser();
+                              if (formKey.currentState!.validate()) {
+                                try {
+                                  final credential = await FirebaseAuth.instance
+                                      .createUserWithEmailAndPassword(
+                                    email: emailController.text,
+                                    password: passwordController.text,
+                                  );
+                                  Navigator.of(context)
+                                      .pushReplacementNamed('/login_page');
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Registered'),
+                                        content: const Text(
+                                            'Account Created successfully!'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'weak-password') {
+                                    if (kDebugMode) {
+                                      print(
+                                          'The password provided is too weak.');
+                                    }
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Error'),
+                                          content: const Text(
+                                              'The password provided is too weak!'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     );
-                                  },
-                                );
-                              } on FirebaseAuthException catch (e) {
-                                if (e.code == 'weak-password') {
-                                  if (kDebugMode) {
-                                    print('The password provided is too weak.');
+                                  } else if (e.code == 'email-already-in-use') {
+                                    if (kDebugMode) {
+                                      print(
+                                          'The account already exists for that email.');
+                                    }
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Error'),
+                                          content: const Text(
+                                              'The account already exists for that email!'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   }
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Error'),
-                                        content: const Text(
-                                            'The password provided is too weak!'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('OK'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                } else if (e.code == 'email-already-in-use') {
-                                  if (kDebugMode) {
-                                    print(
-                                        'The account already exists for that email.');
-                                  }
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('Error'),
-                                        content: const Text(
-                                            'The account already exists for that email!'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('OK'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                } catch (e) {
+                                  print(e);
                                 }
-                              } catch (e) {
-                                print(e);
+                              } else {
+                                print('form-key not valid');
                               }
                             },
                             text: 'Register',

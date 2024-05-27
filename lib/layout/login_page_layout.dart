@@ -130,8 +130,8 @@ class _LoginScreenLayoutState extends State<LoginScreenLayout> {
                             try {
                               final credential = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
-                                      email: emailController.text,
-                                      password: passwordController.text);
+                                  email: emailController.text,
+                                  password: passwordController.text);
                               Navigator.of(context)
                                   .pushReplacementNamed('/home_page');
                             } on FirebaseAuthException catch (e) {
@@ -172,7 +172,7 @@ class _LoginScreenLayoutState extends State<LoginScreenLayout> {
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context)
-                                    .pushReplacementNamed('/reset_password');
+                                    .pushNamed('/reset_password');
                               },
                               child: const Text(
                                 'Reset Password',

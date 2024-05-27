@@ -11,11 +11,12 @@ part 'app_state.dart';
 
 class AppCubit extends Cubit<AppState> {
   AppCubit() : super(AppInitial());
+
   int screenIndex = 0;
   List<Widget> currentScreen = [
-    SearchScreenModule(),
-    HomeScreenModule(),
-    ProfileScreen(),
+    const SearchScreenModule(),
+    const HomeScreenModule(),
+    const ProfileScreen(),
   ];
 
   static AppCubit get(context) => BlocProvider.of(context);

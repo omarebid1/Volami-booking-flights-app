@@ -1,21 +1,26 @@
 class User {
-  final String uid;
-  final String name;
+  final String? uid;
+  final String firstName;
+  final String lastName;
   final String email;
   final String phone;
-  final List<String> bookings;
+  final String password;
+  final List<String>? bookings;
 
   User(
-      {required this.uid,
-      required this.name,
+      {this.uid,
+      required this.firstName,
+      required this.lastName,
       required this.email,
       required this.phone,
-      required this.bookings});
+      required this.password,
+      this.bookings});
 
-  factory User.fromJson(Map<String, dynamic> json) {
+/*factory User.fromJson(Map<String, dynamic> json) {
     return User(
       uid: json['uid'],
-      name: json['name'],
+      firstName: ['firstName'],
+      lastName: json['lastName'],
       email: json['email'],
       phone: json['phone'],
       bookings: List<String>.from(json['bookings']),
@@ -25,10 +30,10 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
-      'name': name,
+      'name': lastName,
       'email': email,
       'phone': phone,
       'bookings': bookings,
     };
-  }
+  }*/
 }

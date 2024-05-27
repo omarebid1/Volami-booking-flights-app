@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +19,18 @@ class HomeScreenModule extends StatelessWidget {
             fontFamily: 'Times New Roman',
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(('/login_page'), (route) => false);
+            },
+            icon: const Icon(
+              Icons.logout,
+            ),
+          )
+        ],
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF161E36),
       ),
